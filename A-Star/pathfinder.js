@@ -4,14 +4,21 @@ class Node {
     this.y = y;
   }
 
-  getNeib() {
+  getNeib(allowDiagonal=true) {
     let list = []
-    for (let i = -1; i < 2; i++) {
-      for (let j = -1; j < 2; j++) {
-        if (i == 0 && j == 0)
-          continue;
-        list.push(createVector(i, j));
+    if (allowDiagonal) {
+      for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+          if (i == 0 && j == 0)
+            continue;
+          list.push(createVector(i, j));
+        }
       }
+    } else {
+      list.push(createVector(0, -1));
+      list.push(createVector(0, 1));
+      list.push(createVector(-1, 0));
+      list.push(createVector(1, 0));
     }
     return list;
   }
@@ -57,10 +64,11 @@ class UnwalkableNode extends Node {
 }
 
 class Pathfinder {
-  constructor(sizeX, sizeY, nodeSize) {
+  constructor(sizeX, sizeY, nodeSize, allowDiagonal=true) {
     this.GRID_SIZE_X = 60;
     this.GRID_SIZE_Y = 35;
     this.NODE_SIZE = 20;
+    this.allowDiagonal = allowDiagonal;
 
     this.unwalkableNodesList = []
   }
@@ -119,7 +127,7 @@ class Pathfinder {
       }
 
       // Loop through all the neighbours
-      let neibList = currentNode.getNeib()
+      let neibList = currentNode.getNeib(this.allowDiagonal)
       for (let i = 0; i < neibList.length; i++) {
         let v = neibList[i];
         let new_node = new WalkableNode(currentNode.x + v.x, currentNode.y + v.y);
