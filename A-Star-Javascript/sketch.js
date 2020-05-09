@@ -37,17 +37,23 @@ function draw() {
 
   let startX = 5;
   let startY = 15;
-  let targetX = constrain(floor(mouseX / NODE_SIZE), 0, GRID_SIZE_X - 1);
-  let targetY = constrain(floor(mouseY / NODE_SIZE), 0, GRID_SIZE_Y - 1);
 
-  rect(startX * NODE_SIZE, startY * NODE_SIZE, NODE_SIZE, NODE_SIZE);
+  // Set the target position to the mouse position
+  let targetX = constrain(floor(mouseX / pathfinder.nodeSize), 0, pathfinder.sizeX - 1);
+  let targetY = constrain(floor(mouseY / pathfinder.nodeSize), 0, pathfinder.sizeY - 1);
 
+  // Draw start node
+  rect(startX * pathfinder.nodeSize, startY * pathfinder.nodeSize, pathfinder.nodeSize, pathfinder.nodeSize);
+
+  // Draw path nodes
   lst = pathfinder.getPath(startX, startY, targetX, targetY);
   for (let i = 0; i < lst.length; i++) {
     lst[i].draw();
   }
 
+  // Draw unwalkable nodes
   pathfinder.drawUnwalkableNodes();
 
-  rect(targetX * NODE_SIZE, targetY * NODE_SIZE, NODE_SIZE, NODE_SIZE);
+  // Draw target node
+  rect(targetX * pathfinder.nodeSize, targetY * pathfinder.nodeSize, pathfinder.nodeSize, pathfinder.nodeSize);
 }

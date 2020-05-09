@@ -65,12 +65,23 @@ class UnwalkableNode extends Node {
 
 class Pathfinder {
   constructor(sizeX, sizeY, nodeSize, allowDiagonal=true) {
-    this.GRID_SIZE_X = 60;
-    this.GRID_SIZE_Y = 35;
-    this.NODE_SIZE = 20;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.nodeSize = nodeSize;
     this.allowDiagonal = allowDiagonal;
 
     this.unwalkableNodesList = []
+  }
+
+  // Returns the index in the list if found.
+  // Returns -1 if not found
+  nodeExistsInList(nodeX, nodeY, list) {
+    for (let j = 0; j < list.length; j++) {
+      if (list[j].x == nodeX && list[j].y == nodeY) {
+        return j; // Found it
+      }
+    }
+    return -1; // Didn't find it
   }
 
   getPath(startX, startY, targetX, targetY) {
@@ -78,14 +89,7 @@ class Pathfinder {
     let closedNodeList = []
 
     // Check if the target node exists in the unwalkables list
-    let existsInUnwalkables = false;
-    for (let j = 0; j < this.unwalkableNodesList.length; j++) {
-      if (this.unwalkableNodesList[j].x == targetX && this.unwalkableNodesList[j].y == targetY) {
-        existsInUnwalkables = true;
-        break;
-      }
-    }
-    if (existsInUnwalkables)
+    if (this.nodeExistsInList(targetX, targetY, this.unwalkableNodesList) != -1)
       return [];
 
     let hCost = dist2(startX, startY, targetX, targetY);
@@ -133,40 +137,19 @@ class Pathfinder {
         let new_node = new WalkableNode(currentNode.x + v.x, currentNode.y + v.y);
 
         // Check if the neib node exists in the closed list
-        let existsInClosed = false;
-        for (let j = 0; j < closedNodeList.length; j++) {
-          if (closedNodeList[j].x == new_node.x && closedNodeList[j].y == new_node.y) {
-            existsInClosed = true;
-            break;
-          }
-        }
-        if (existsInClosed)
+        if (this.nodeExistsInList(new_node.x, new_node.y, closedNodeList) != -1)
           continue;
 
         // Check if the neib node exists in the unwalkables list
-        let existsInUnwalkables = false;
-        for (let j = 0; j < this.unwalkableNodesList.length; j++) {
-          if (this.unwalkableNodesList[j].x == new_node.x && this.unwalkableNodesList[j].y == new_node.y) {
-            existsInUnwalkables = true;
-            break;
-          }
-        }
-        if (existsInUnwalkables)
+        if (this.nodeExistsInList(new_node.x, new_node.y, this.unwalkableNodesList) != -1)
           continue;
 
         let gCost = currentNode.gCost + dist2(currentNode.x, currentNode.y, currentNode.x + v.x, currentNode.y + v.y);
         let hCost = dist2(currentNode.x + v.x, currentNode.y + v.y, targetX, targetY);
 
         // Check if the neib node exists in the open list
-        let existsInOpen = false;
-        let ind = -1;
-        for (let j = 0; j < openNodeList.length; j++) {
-          if (openNodeList[j].x == new_node.x && openNodeList[j].y == new_node.y) {
-            existsInOpen = true;
-            ind = j;
-            break;
-          }
-        }
+        let ind = this.nodeExistsInList(new_node.x, new_node.y, openNodeList);
+        let existsInOpen = ind != -1;
 
         // Add the open node or update it
         if (!existsInOpen || gCost < openNodeList[ind].gCost) {
