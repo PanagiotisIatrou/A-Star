@@ -5,38 +5,27 @@ let NODE_SIZE = 20;
 let lst;
 let pathfinder;
 
+// Start position
+let startX = 5;
+let startY = 15;
+
 function setup() {
   createCanvas(GRID_SIZE_X * NODE_SIZE, GRID_SIZE_Y * NODE_SIZE);
   noStroke();
 
+  // Create an instance of the Pathfinder
   pathfinder = new Pathfinder(GRID_SIZE_X, GRID_SIZE_Y, NODE_SIZE);
 
-  for (let i = 0; i < 10; i++) {
-    pathfinder.addUnwalkableNode(20, 4 + i);
-  }
-
-  for (let i = 0; i < 10; i++) {
-    pathfinder.addUnwalkableNode(20, 16 + i);
-  }
-
-  for (let i = 0; i < 10; i++) {
-    pathfinder.addUnwalkableNode(30, 10 + i);
-  }
-
-  for (let i = 0; i < 10; i++) {
-    pathfinder.addUnwalkableNode(40, 4 + i);
-  }
-
-  for (let i = 0; i < 10; i++) {
-    pathfinder.addUnwalkableNode(40, 16 + i);
-  }
+  // Add unwalkable lines
+  pathfinder.addUnwalkableRect(20, 4, 1, 10);
+  pathfinder.addUnwalkableRect(20, 16, 1, 10);
+  pathfinder.addUnwalkableRect(30, 10, 1, 10);
+  pathfinder.addUnwalkableRect(40, 4, 1, 10);
+  pathfinder.addUnwalkableRect(40, 16, 1, 10);
 }
 
 function draw() {
   background(80);
-
-  let startX = 5;
-  let startY = 15;
 
   // Set the target position to the mouse position
   let targetX = constrain(floor(mouseX / pathfinder.nodeSize), 0, pathfinder.sizeX - 1);

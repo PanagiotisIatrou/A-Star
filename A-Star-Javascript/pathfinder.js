@@ -4,7 +4,7 @@ class Node {
     this.y = y;
   }
 
-  getNeib(allowDiagonal=true) {
+  _getNeib(allowDiagonal=true) {
     let list = []
     if (allowDiagonal) {
       for (let i = -1; i < 2; i++) {
@@ -75,7 +75,7 @@ class Pathfinder {
 
   // Returns the index in the list if found.
   // Returns -1 if not found
-  nodeExistsInList(nodeX, nodeY, list) {
+  static _nodeExistsInList(nodeX, nodeY, list) {
     for (let j = 0; j < list.length; j++) {
       if (list[j].x == nodeX && list[j].y == nodeY) {
         return j; // Found it
@@ -84,15 +84,28 @@ class Pathfinder {
     return -1; // Didn't find it
   }
 
+  // Returns the h distance between 2 nodes
+  static _dist2(x1, y1, x2, y2) {
+    let diffX = abs(x2 - x1);
+    let diffY = abs(y2 - y1);
+    let diff = min(diffY, diffX);
+    diffX -= diff;
+    diffY -= diff;
+
+    return diff * 14 + (diffX + diffY) * 10;
+  }
+
+  // Returns a list of all the nodes that make up the path starting from
+  // (startX, startY) and ending in (targetX, targetY)
   getPath(startX, startY, targetX, targetY) {
     let openNodeList = []
     let closedNodeList = []
 
     // Check if the target node exists in the unwalkables list
-    if (this.nodeExistsInList(targetX, targetY, this.unwalkableNodesList) != -1)
+    if (Pathfinder._nodeExistsInList(targetX, targetY, this.unwalkableNodesList) != -1)
       return [];
 
-    let hCost = dist2(startX, startY, targetX, targetY);
+    let hCost = Pathfinder._dist2(startX, startY, targetX, targetY);
     let startNode = new WalkableNode(startX, startY, 0, hCost);
     openNodeList.push(startNode);
 
@@ -131,24 +144,24 @@ class Pathfinder {
       }
 
       // Loop through all the neighbours
-      let neibList = currentNode.getNeib(this.allowDiagonal)
+      let neibList = currentNode._getNeib(this.allowDiagonal)
       for (let i = 0; i < neibList.length; i++) {
         let v = neibList[i];
         let new_node = new WalkableNode(currentNode.x + v.x, currentNode.y + v.y);
 
         // Check if the neib node exists in the closed list
-        if (this.nodeExistsInList(new_node.x, new_node.y, closedNodeList) != -1)
+        if (Pathfinder._nodeExistsInList(new_node.x, new_node.y, closedNodeList) != -1)
           continue;
 
         // Check if the neib node exists in the unwalkables list
-        if (this.nodeExistsInList(new_node.x, new_node.y, this.unwalkableNodesList) != -1)
+        if (Pathfinder._nodeExistsInList(new_node.x, new_node.y, this.unwalkableNodesList) != -1)
           continue;
 
-        let gCost = currentNode.gCost + dist2(currentNode.x, currentNode.y, currentNode.x + v.x, currentNode.y + v.y);
-        let hCost = dist2(currentNode.x + v.x, currentNode.y + v.y, targetX, targetY);
+        let gCost = currentNode.gCost + Pathfinder._dist2(currentNode.x, currentNode.y, currentNode.x + v.x, currentNode.y + v.y);
+        let hCost = Pathfinder._dist2(currentNode.x + v.x, currentNode.y + v.y, targetX, targetY);
 
         // Check if the neib node exists in the open list
-        let ind = this.nodeExistsInList(new_node.x, new_node.y, openNodeList);
+        let ind = Pathfinder._nodeExistsInList(new_node.x, new_node.y, openNodeList);
         let existsInOpen = ind != -1;
 
         // Add the open node or update it
@@ -175,24 +188,25 @@ class Pathfinder {
     return path.reverse();
   }
 
+  // Creates an unwalkable node
   addUnwalkableNode(x, y) {
     let node = new UnwalkableNode(x, y);
     this.unwalkableNodesList.push(node);
   }
 
+  // Creates an unwalkable rectangle in (x, y) with width w and height h
+  addUnwalkableRect(x, y, w, h) {
+    for (let i = x; i < x + w; i++) {
+      for (let j = y; j < y + h; j++) {
+        this.addUnwalkableNode(i, j);
+      }
+    }
+  }
+
+  // Draws all the unwalkable nodes the pathfinder instance has
   drawUnwalkableNodes() {
     for (let i = 0; i < this.unwalkableNodesList.length; i++) {
       this.unwalkableNodesList[i].draw();
     }
   }
-}
-
-function dist2(x1, y1, x2, y2) {
-  let diffX = abs(x2 - x1);
-  let diffY = abs(y2 - y1);
-  let diff = min(diffY, diffX);
-  diffX -= diff;
-  diffY -= diff;
-
-  return diff * 14 + (diffX + diffY) * 10;
 }
