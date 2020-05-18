@@ -128,7 +128,7 @@ class Pathfinder {
           }
         }
       }
-      if (minIndex == -1)
+      if (minIndex == -1 || this.sizeX * this.sizeY == openNodeList.length + closedNodeList.length - this.unwalkableNodesList.length)
         return [];
 
       let currentNode = openNodeList[minIndex];
@@ -164,8 +164,16 @@ class Pathfinder {
         let ind = Pathfinder._nodeExistsInList(new_node.x, new_node.y, openNodeList);
         let existsInOpen = ind != -1;
 
+        // Check if path goes between 2 obstacles
+        let canPass = true;
+        if (abs(new_node.x - currentNode.x) + abs(new_node.y - currentNode.y) == 2) {
+          if (Pathfinder._nodeExistsInList(currentNode.x, new_node.y, this.unwalkableNodesList) != -1 && Pathfinder._nodeExistsInList(new_node.x, currentNode.y, this.unwalkableNodesList) != -1) {
+            canPass = false;
+          }
+        }
+
         // Add the open node or update it
-        if (!existsInOpen || gCost < openNodeList[ind].gCost) {
+        if ((!existsInOpen || gCost < openNodeList[ind].gCost) && canPass) {
           if (existsInOpen)
             openNodeList.splice(ind, 1);
 

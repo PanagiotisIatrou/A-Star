@@ -31,4 +31,7 @@ The line above returns a list of all the nodes that make up the path. The start 
 nodesList[i].x
 nodesList[i].y
 ```
+**Note** that if the target node is unreachable then an empty list is returned.  
 **Note** that if the target node happens to be an unwalkable node then an empty list is returned.
+#### Useful functions
+```addUnwalkableRect(x, y, w, h)``` creates an unwalkable rectangle in position (x, y) with w width and h height

@@ -17,11 +17,24 @@ function setup() {
   pathfinder = new Pathfinder(GRID_SIZE_X, GRID_SIZE_Y, NODE_SIZE);
 
   // Add unwalkable lines
-  pathfinder.addUnwalkableRect(20, 4, 1, 10);
-  pathfinder.addUnwalkableRect(20, 16, 1, 10);
-  pathfinder.addUnwalkableRect(30, 10, 1, 10);
-  pathfinder.addUnwalkableRect(40, 4, 1, 10);
-  pathfinder.addUnwalkableRect(40, 16, 1, 10);
+  // pathfinder.addUnwalkableRect(20, 4, 1, 10);
+  // pathfinder.addUnwalkableRect(20, 16, 1, 10);
+  // pathfinder.addUnwalkableRect(30, 10, 1, 10);
+  // pathfinder.addUnwalkableRect(40, 4, 1, 10);
+  // pathfinder.addUnwalkableRect(40, 16, 1, 10);
+
+  // pathfinder.addUnwalkableNode(20, 10);
+  // pathfinder.addUnwalkableNode(22, 10);
+  // pathfinder.addUnwalkableNode(21, 9);
+  // pathfinder.addUnwalkableNode(21, 11);
+  pathfinder.addUnwalkableNode(20, 10);
+  pathfinder.addUnwalkableNode(21, 10);
+  pathfinder.addUnwalkableNode(20, 13);
+  pathfinder.addUnwalkableNode(21, 13);
+  pathfinder.addUnwalkableNode(22, 11);
+  pathfinder.addUnwalkableNode(22, 12);
+  pathfinder.addUnwalkableNode(19, 11);
+  pathfinder.addUnwalkableNode(19, 12);
 }
 
 function draw() {
@@ -39,6 +52,7 @@ function draw() {
   for (let i = 0; i < lst.length; i++) {
     lst[i].draw();
   }
+  print(lst[lst.length - 1]);
 
   // Draw unwalkable nodes
   pathfinder.drawUnwalkableNodes();
