@@ -8,7 +8,7 @@ Add these 2 lines in your html file:
 ```
 
 ## How to use
-#### Declaring
+### Declaring
 First of all you have to declare an instance of the Pathfinder class like this:
 ```javascript
 let pathfinder = new Pathfinder(60, 30, 20, true, Pathfinder.euclideanDistance);
@@ -18,7 +18,7 @@ The line above creates an 60x30 grid with 20pixel nodes where each node is walka
 - Pathfinder.manhattanDistance  
 
 However, you can build your own. The function must take take (x1, y1, x2, y2) as arguements and return a number
-#### Adding unwalkable nodes
+### Adding unwalkable nodes
 You can start adding unwalkable nodes like this:
 ```javascript
 pathfinder.addUnwalkableNode(15, 8);
@@ -31,7 +31,7 @@ pathfinder.addUnwalkableRect(20, 13, 5, 10);
 ```  
 This creates an unwalkable rectangle in position (x=20, y=13) with 5 width and 10 height
 **Note** that adding obstacles is optional.
-#### Finding path
+### Finding path
 Firstly you should specify what the start and target nodes are. You can do so with:
 ```javascript
 pathfinder.setStartNode(5, 3);
@@ -48,7 +48,7 @@ nodesList[i].y
 ```
 **Note** that if the target node is unreachable then an empty list is returned.  
 **Note** that if the target node happens to be an unwalkable node then an empty list is returned.
-#### Visualizing
+### Visualizing
 There are a couple of functions that handle this and you have 2 options.
 1) Simple way:  
 ```javascript
