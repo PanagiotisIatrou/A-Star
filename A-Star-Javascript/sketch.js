@@ -2,8 +2,8 @@ let GRID_SIZE_X = 60;
 let GRID_SIZE_Y = 30;
 let NODE_SIZE = 20;
 
-let lst;
 let pathfinder;
+let lst;
 
 // Start position
 let startX = 5;
@@ -14,27 +14,27 @@ function setup() {
   noStroke();
 
   // Create an instance of the Pathfinder
-  pathfinder = new Pathfinder(GRID_SIZE_X, GRID_SIZE_Y, NODE_SIZE);
+  pathfinder = new Pathfinder(GRID_SIZE_X, GRID_SIZE_Y, NODE_SIZE, true, Pathfinder.euclideanDistance);
+  pathfinder.setStartNode(startX, startY);
 
   // Add unwalkable lines
-  // pathfinder.addUnwalkableRect(20, 4, 1, 10);
-  // pathfinder.addUnwalkableRect(20, 16, 1, 10);
-  // pathfinder.addUnwalkableRect(30, 10, 1, 10);
-  // pathfinder.addUnwalkableRect(40, 4, 1, 10);
-  // pathfinder.addUnwalkableRect(40, 16, 1, 10);
+  pathfinder.addUnwalkableRect(20, 4, 1, 10);
+  pathfinder.addUnwalkableRect(20, 16, 1, 10);
+  pathfinder.addUnwalkableRect(40, 4, 1, 10);
+  pathfinder.addUnwalkableRect(40, 16, 1, 10);
 
-  // pathfinder.addUnwalkableNode(20, 10);
-  // pathfinder.addUnwalkableNode(22, 10);
-  // pathfinder.addUnwalkableNode(21, 9);
-  // pathfinder.addUnwalkableNode(21, 11);
-  pathfinder.addUnwalkableNode(20, 10);
-  pathfinder.addUnwalkableNode(21, 10);
-  pathfinder.addUnwalkableNode(20, 13);
-  pathfinder.addUnwalkableNode(21, 13);
-  pathfinder.addUnwalkableNode(22, 11);
-  pathfinder.addUnwalkableNode(22, 12);
-  pathfinder.addUnwalkableNode(19, 11);
-  pathfinder.addUnwalkableNode(19, 12);
+  pathfinder.addUnwalkableNode(29, 12);
+  pathfinder.addUnwalkableNode(30, 12);
+  pathfinder.addUnwalkableNode(28, 13);
+  pathfinder.addUnwalkableNode(28, 14);
+  pathfinder.addUnwalkableNode(28, 15);
+  pathfinder.addUnwalkableNode(28, 16);
+  pathfinder.addUnwalkableNode(31, 13);
+  pathfinder.addUnwalkableNode(31, 14);
+  pathfinder.addUnwalkableNode(31, 15);
+  pathfinder.addUnwalkableNode(31, 16);
+  pathfinder.addUnwalkableNode(29, 17);
+  pathfinder.addUnwalkableNode(30, 17);
 }
 
 function draw() {
@@ -43,20 +43,11 @@ function draw() {
   // Set the target position to the mouse position
   let targetX = constrain(floor(mouseX / pathfinder.nodeSize), 0, pathfinder.sizeX - 1);
   let targetY = constrain(floor(mouseY / pathfinder.nodeSize), 0, pathfinder.sizeY - 1);
+  pathfinder.setTargetNode(targetX, targetY);
 
-  // Draw start node
-  rect(startX * pathfinder.nodeSize, startY * pathfinder.nodeSize, pathfinder.nodeSize, pathfinder.nodeSize);
+  // Get Path
+  lst = pathfinder.getPath();
 
-  // Draw path nodes
-  lst = pathfinder.getPath(startX, startY, targetX, targetY);
-  for (let i = 0; i < lst.length; i++) {
-    lst[i].draw();
-  }
-  print(lst[lst.length - 1]);
-
-  // Draw unwalkable nodes
-  pathfinder.drawUnwalkableNodes();
-
-  // Draw target node
-  rect(targetX * pathfinder.nodeSize, targetY * pathfinder.nodeSize, pathfinder.nodeSize, pathfinder.nodeSize);
+  // Visualize everything
+  pathfinder.drawEverything();
 }
