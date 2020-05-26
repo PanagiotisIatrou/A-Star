@@ -1,5 +1,7 @@
 # A-Star
 
+![image](visualization.gif)
+
 ## How to install
 Add these 2 lines in your html file:
 ```html
