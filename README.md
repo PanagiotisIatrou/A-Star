@@ -54,7 +54,8 @@ There are a couple of functions that handle this and you have 2 options.
 ```javascript
 pathfinder.drawEverything();
 ```
-**Note** that this should be called after the ```javascript pathfinder.getPath()``` has been called  
+**Note** that this should be called after the ```pathfinder.getPath()``` has been called.
+
 2) Advanced way:  
 ```javascript
 node.draw(); // Draws a single node with the correct color
